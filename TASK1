@@ -1,0 +1,181 @@
+// SQL TASK-1
+
+
+CREATE SEQUENCE bookseq10 START WITH 1 INCREMENT BY 1;
+
+Sequence created.
+
+SQL> create table BooksTable10 (BookID number(14) primary key, title varchar2(40) not null, author varchar2(40), genre varchar2(10), publishedYear number(10) not null);
+
+Table created.
+
+SQL> CREATE SEQUENCE members_seq START WITH 1 INCREMENT BY 1;
+
+Sequence created.
+
+SQL> create table MembersTable10 (MemberID number(14) primary key, name varchar2(40) not null, email varchar2(40), phone_no number(10), join_date date not null);
+
+Table created.
+
+SQL> CREATE SEQUENCE transaction_seq START WITH 1 INCREMENT BY 1;
+
+Sequence created.
+
+SQL> create table Transactions (TransactionID number(20) primary key, BookID number,MemberID number, BorrowDate date, ReturnDate date, status varchar2(40), constraint status_check check(status = 'borrowed' or status = 'returned'), foreign key(BookID) references BooksTable10(BookID), foreign key (MemberID) references MembersTable10(MemberID));
+
+Table created.
+
+SQL> insert into BooksTable10 (BookID,title, author, genre, publishedYear)
+  2  values(123532876, 'the great gatsby', 'f.scott fitzgerald', 'fiction', 1925);
+
+1 row created.
+
+SQL> insert into BooksTable10 (BookID,title, author, genre, publishedYear)
+  2  values(83976763263, 'nature','finral jhon','novel', 1946);
+
+1 row created.
+
+
+SQL> insert into MembersTable10 (MemberID, name, email, phone_no, join_date)
+  2  values(647653278, 'arun', 'arun847@gmail.com', 9338284292, '4-10-2005');
+values(647653278, 'arun', 'arun847@gmail.com', 9338284292, '4-10-2005')
+          
+
+
+SQL> insert into MembersTable10 (MemberID, name, email, phone_no, join_date)
+  2  values(647653278, 'arun', 'arun847@gmail.com', 9338284292, to_date('2005-10-24','yyyy-mm-dd'));
+
+1 row created.
+
+SQL> insert into MembersTable10 (MemberID, name, email, phone_no, join_date)
+  2  values(8458972978, 'allu arjun', 'alluarjun@gmail.com', 911
+3841292, to_date('2002-5-12','yyyy-mm-dd'));
+
+1 row created.
+
+SQL> insert into Transactions(TransactionID, BookID, MemberID, borrow_date, return_date, status)
+  2  values(837327382, 647653278, 8458972978, to_date('2006-12-31','yyyy-mm-dd'), to_date('2007-3-19','yyyy-mm-dd'), 'borrowed');
+insert into Transactions(TransactionID, BookID, MemberID, borrow_date, return_date, status)
+
+       *
+ERROR at line 1:
+ORA-00904: "RETURN_DATE": invalid identifier
+
+
+SQL> insert into Transactions(TransactionID, BookID, MemberID, borrow_date, return_date, status)
+  2  values(837327382, 647653278, 8458972978, to_date('2006-12-31','yyyy-mm-dd'), to_date('2007-03-19','yyyy-mm-dd'), 'borrowed'
+);
+insert into Transactions(TransactionID, BookID, MemberID, borrow_date, return_date, status)
+
+
+SQL> insert into Transactions(TransactionID, BookID, MemberID, BorrowDate, ReturnDate, status)
+  2  values(837327382, 647653278, 8458972978, to_date('2006-12-31','yyyy-mm-dd'), to_date('2007-03-19','yyyy-mm-dd'), 'borrowed');
+insert into Transactions(TransactionID, BookID, MemberID, BorrowDate, ReturnDate, status)
+
+
+SQL> INSERT INTO Transactions(TransactionID, BookID, MemberID) SELECT BookID, MemberID
+  2  FROM BooksTable10, MembersTable10 WHERE BooksTable10.BookID =647653278,  MembersTable10.MemberID = 8458972978;
+FROM BooksTable10, MembersTable10 WHERE BooksTable10.BookID =647653278,  MembersTable10.MemberID = 8458972978
+                                                                      *
+ERROR at line 2:
+ORA-00933: SQL command not properly ended
+
+
+SQL> INSERT INTO Transactions(TransactionID, BookID, MemberID) SELECT BookID, MemberID
+  2  FROM BooksTable10, MembersTable10 WHERE BooksTable10.BookID =647653278 and MembersTable10.MemberID = 8458972978;
+INSERT INTO Transactions(TransactionID, BookID, MemberID) SELECT BookID, MemberID
+            *
+ERROR at line 1:
+ORA-00947: not enough values
+
+
+SQL> INSERT INTO Transactions (TransactionID, BookID, MemberID)
+  2  SELECT 837327382, BooksTable10.BookID, MembersTable10.MemberID
+  3  FROM BooksTable10, MembersTable10
+  4  WHERE BooksTable10.BookID = 647653278
+  5  AND MembersTable10.MemberID = 8458972978;
+
+0 rows created.
+
+SQL> UPDATE Books
+  2  SET genre = 'Science Fiction'
+  3  WHERE book_id = 1;
+
+0 rows updated.
+
+SQL> UPDATE BooksTable10
+  2  set genre= 'science fiction'
+  3  where BookID=1;
+
+0 rows updated.
+
+SQL> DELETE FROM BooksTable10
+  2  WHERE BookID = 2;
+
+0 rows deleted.
+
+SQL> DELETE FROM MembersTable10
+  2  ;
+
+2 rows deleted.
+
+SQL> UPDATE BooksTable10
+  2  set genre= 'science fiction'
+  3  where BookID=83976763263;
+set genre= 'science fiction'
+           *
+ERROR at line 2:
+ORA-12899: value too large for column "SYSTEM"."BOOKSTABLE10"."GENRE" (actual:
+15, maximum: 10)
+
+
+SQL> UPDATE BooksTable10
+  2  set genre= 'science'
+  3  where BookID=83976763263;
+
+1 row updated.
+
+SQL> DELETE FROM Books
+  2  WHERE book_id = 1;
+
+0 rows deleted.
+
+SQL> DELETE FROM BooksTable10
+  2  WHERE book_id = 83976763263;
+WHERE book_id = 83976763263
+      *
+ERROR at line 2:
+ORA-00904: "BOOK_ID": invalid identifier
+
+
+SQL> DELETE FROM BooksTable10
+  2  WHERE BookID = 83976763263;
+
+1 row deleted.
+
+SQL> SELECT * FROM BooksTable10;
+
+    BOOKID TITLE
+---------- ----------------------------------------
+AUTHOR                                   GENRE      PUBLISHEDYEAR
+---------------------------------------- ---------- -------------
+ 123532876 the great gatsby
+f.scott fitzgerald                       fiction             1925
+
+
+SQL> SELECT * FROM MembersTable10
+  2  WHERE MemberID > 0;
+
+no rows selected
+
+SQL> SELECT * FROM MembersTable10
+  2  WHERE MemberID > 6000000;
+
+no rows selected
+
+SQL> SELECT * FROM MembersTable10
+  2  WHERE MemberID > 600000000;
+
+no rows selected
+
+SQL>
